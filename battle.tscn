@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://ds3y2rrr11y1h"]
+
+[ext_resource type="Texture2D" uid="uid://ew2qad1ac5gf" path="res://battle_bg.png" id="1_ip7xm"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="BattleBg" type="Sprite2D" parent="."]
+position = Vector2(400, 301)
+scale = Vector2(1, 1.07554)
+texture = ExtResource("1_ip7xm")
