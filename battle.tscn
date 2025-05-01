@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://ds3y2rrr11y1h"]
+[gd_scene load_steps=14 format=3 uid="uid://ds3y2rrr11y1h"]
 
 [ext_resource type="Texture2D" uid="uid://ew2qad1ac5gf" path="res://battle_bg.png" id="1_ip7xm"]
 [ext_resource type="Shader" uid="uid://degwetys6ixsf" path="res://selection.gdshader" id="2_7sfm4"]
 [ext_resource type="Texture2D" uid="uid://b2ipy827jj5dd" path="res://samurai.png" id="3_i431l"]
+[ext_resource type="Script" uid="uid://j1kw2y3jg5ax" path="res://grid.gd" id="4_6t8i5"]
 [ext_resource type="Texture2D" uid="uid://bcv645jb48khl" path="res://hexagon.png" id="4_i431l"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6t8i5"]
@@ -67,26 +68,25 @@ position = Vector2(400, 301)
 scale = Vector2(1, 1.07554)
 texture = ExtResource("1_ip7xm")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-material = SubResource("ShaderMaterial_6t8i5")
-position = Vector2(296, 120)
-sprite_frames = SubResource("SpriteFrames_sl0w2")
-frame_progress = 0.282471
+[node name="Grid" type="Node2D" parent="."]
+position = Vector2(0, -20)
+script = ExtResource("4_6t8i5")
 
-[node name="Node2D" type="Node2D" parent="."]
-
-[node name="Hexagon" type="Sprite2D" parent="Node2D"]
+[node name="Hexagon" type="Sprite2D" parent="Grid"]
 position = Vector2(72, 176)
 texture = ExtResource("4_i431l")
 
-[node name="Hexagon2" type="Sprite2D" parent="Node2D"]
-position = Vector2(136, 176)
+[node name="Hexagon2" type="Sprite2D" parent="Grid"]
+position = Vector2(135, 176)
 texture = ExtResource("4_i431l")
 
-[node name="Hexagon3" type="Sprite2D" parent="Node2D"]
-position = Vector2(104, 232)
+[node name="Hexagon3" type="Sprite2D" parent="Grid"]
+position = Vector2(104, 231)
 texture = ExtResource("4_i431l")
 
-[node name="Hexagon4" type="Sprite2D" parent="Node2D"]
-position = Vector2(168, 232)
-texture = ExtResource("4_i431l")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_6t8i5")
+position = Vector2(75, 127)
+sprite_frames = SubResource("SpriteFrames_sl0w2")
+autoplay = "default"
+frame_progress = 0.282471
