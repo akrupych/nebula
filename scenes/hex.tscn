@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://b51ewttoobfjy"]
+
+[ext_resource type="Texture2D" uid="uid://bcv645jb48khl" path="res://sprites/hexagon.png" id="1_djunl"]
+[ext_resource type="Script" uid="uid://bhub0btx7iyyn" path="res://scripts/hex.gd" id="2_khich"]
+
+[node name="Hex" type="Sprite2D"]
+texture = ExtResource("1_djunl")
+script = ExtResource("2_khich")
