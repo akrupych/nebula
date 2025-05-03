@@ -5,6 +5,9 @@ extends Node2D
 const HEXAGON_FILLED_TEXTURE = preload("res://sprites/hexagon filled.png")
 
 func _ready():
+	grid.get_hex(2, 2).is_blocked = true
+	grid.get_hex(2, 1).is_blocked = true
+	
 	for hex in hex_reachable(grid.get_hex(0, 0), 4):
 		hex.texture = HEXAGON_FILLED_TEXTURE
 
