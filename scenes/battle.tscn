@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=3 uid="uid://ds3y2rrr11y1h"]
 
 [ext_resource type="Script" uid="uid://ccuvfcxqhf24m" path="res://scripts/game.gd" id="1_6vh42"]
-[ext_resource type="Texture2D" uid="uid://ew2qad1ac5gf" path="res://sprites/battle_bg.png" id="2_4k1nj"]
+[ext_resource type="Texture2D" uid="uid://bsiwyg0yjyo6m" path="res://sprites/sketch_bg.png" id="2_6vh42"]
 [ext_resource type="Script" uid="uid://j1kw2y3jg5ax" path="res://scripts/grid.gd" id="3_f4pi3"]
 [ext_resource type="PackedScene" uid="uid://b51ewttoobfjy" path="res://scenes/hex.tscn" id="4_yahae"]
 [ext_resource type="Shader" uid="uid://degwetys6ixsf" path="res://shaders/selection.gdshader" id="5_v7i3o"]
@@ -66,9 +66,8 @@ animations = [{
 script = ExtResource("1_6vh42")
 
 [node name="BattleBg" type="Sprite2D" parent="."]
-position = Vector2(400, 301)
-scale = Vector2(1, 1.07554)
-texture = ExtResource("2_4k1nj")
+position = Vector2(400, 300)
+texture = ExtResource("2_6vh42")
 
 [node name="Grid" type="Node2D" parent="."]
 position = Vector2(0, -20)

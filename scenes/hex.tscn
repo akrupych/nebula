@@ -6,3 +6,8 @@
 [node name="Hex" type="Sprite2D"]
 texture = ExtResource("1_djunl")
 script = ExtResource("2_khich")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="Area2D"]
+polygon = PackedVector2Array(0, -37, -32, -18, -32, 18, 0, 37, 32, 18, 32, -18)

@@ -32,9 +32,14 @@ func _ready():
 			new_hex.add_child(label)
 			self.add_child(new_hex)
 			grid[i].append(new_hex)
+	delete_initial_hexes()
+
+func delete_initial_hexes():
+	self.remove_child(hexagon)
+	self.remove_child(hexagon_down)
+	self.remove_child(hexagon_right)
 
 func get_hex(row: int, column: int) -> Hex:
 	if row >= 0 and row < ROWS and column >= 0 and column < COLUMNS:
 		return grid[row][column]
-	
 	return null
