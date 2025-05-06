@@ -12,27 +12,30 @@ const ROWS = 8
 @export var grid: Array = []
 
 func _ready():
+	prepare_grid()
+	delete_initial_hexes()
+
+func prepare_grid():
 	var sample_hex: Hex = hexagon.duplicate()
 	
 	var offset_right: Vector2 = hexagon_right.position - hexagon.position
 	var offset_down: Vector2 = hexagon_down.position - hexagon.position
 	
-	for i in range(COLUMNS):
+	for i in range(ROWS):
 		grid.append([])
-		for j in range(ROWS):
+		for j in range(COLUMNS):
 			var new_hex: Hex = sample_hex.duplicate()
 			
-			new_hex.position += offset_right * i + Vector2(offset_down.x * (j % 2), offset_down.y * j)
+			new_hex.position += offset_right * j + Vector2(offset_down.x * (i % 2), offset_down.y * i)
 			
-			new_hex.column = i
-			new_hex.row = j
+			new_hex.column = j
+			new_hex.row = i
 			var label = Label.new()
 			
 			label.text = str(i) + ", " + str(j)
 			new_hex.add_child(label)
 			self.add_child(new_hex)
 			grid[i].append(new_hex)
-	delete_initial_hexes()
 
 func delete_initial_hexes():
 	self.remove_child(hexagon)
@@ -43,3 +46,6 @@ func get_hex(row: int, column: int) -> Hex:
 	if row >= 0 and row < ROWS and column >= 0 and column < COLUMNS:
 		return grid[row][column]
 	return null
+
+func get_hex_by_pos(pos: Vector2) -> Hex:
+	return get_hex(pos.x, pos.y)

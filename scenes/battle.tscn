@@ -88,3 +88,7 @@ position = Vector2(75, 127)
 sprite_frames = SubResource("SpriteFrames_sl0w2")
 autoplay = "default"
 frame_progress = 0.282471
+
+[node name="Line2D" type="Line2D" parent="."]
+points = PackedVector2Array(0, 0, 0, 0, 0, 0, 12, -2, 18, 0, 53, 16, 63, 44)
+width = 4.0
