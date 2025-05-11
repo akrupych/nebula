@@ -8,8 +8,8 @@ class_name Hex
 func _process(_delta):
 	if is_blocked and self.texture != null:
 		self.texture = null
-		self.remove_child(self.get_child(0))
-		self.remove_child(self.get_child(0))
+		for node in self.get_tree().get_nodes_in_group(self.name):
+			self.remove_child(node)
 
 func get_grid_coordinates() -> Vector2:
 	return Vector2(row, column)

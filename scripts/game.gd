@@ -1,36 +1,110 @@
 extends Node2D
 
 @onready var grid: Grid = $Grid
+@onready var turn_counter: Label = $TurnCounter
+@onready var samurai: Samurai = $Samurai
+
+var reachable_pivot: Hex
 
 var highlighted_hex: Hex = null
 var last_navigated: Hex = null
 var nav_line: Line2D = null
+const HEXAGON_DEFAULT_TEXTURE = preload("res://sprites/hexagon.png")
 const HEXAGON_FILLED_TEXTURE = preload("res://sprites/hexagon filled.png")
 
 var a_star: AStar3D = AStar3D.new()
 
+@onready var units: Array[Unit] = [samurai]
+var turn_order: int = 0
+var turn_number: int = 0
+
+var is_there_unit_movement: bool = false
+var movement_path: Array[Hex] = []
+var movement_turn: int = 1
+
+var unit_offset_to_hex: Vector2
+
+const MOVEMENT_TURNS: int = 10
+
 func _ready():
 	block_hexes()
-	var start = grid.get_hex(0, 0)
-	fill_reachable(start, 4)
+	for unit in units:
+		unit.underlying_hex = get_hex_at_pos(unit.position)
+	reachable_pivot = units[turn_order].underlying_hex
+	fill_reachable(reachable_pivot, 4)
 	prepare_navigation()
 
 func _process(_delta):
 	highlight_hovered()
 	
-	if highlighted_hex != last_navigated and highlighted_hex != null:
+	if turn_order >= units.size():
+		turn_number += 1
+		turn_order = 0
+		turn_counter.text = "Turn count: " + str(turn_number + 1)
+	
+	var current_unit: Unit = units[turn_order]
+	
+	if is_there_unit_movement:
+		if movement_path.size() < 2:
+			is_there_unit_movement = false
+			movement_path = []
+			movement_turn = 1
+			turn_order += 1
+		else:
+			var from: Hex = movement_path[0]
+			var to: Hex = movement_path[1]
+			var path_step: Vector2 = (to.position - from.position) / MOVEMENT_TURNS
+			current_unit.position = from.position + (path_step * movement_turn) + unit_offset_to_hex
+			movement_turn += 1
+			
+			if movement_turn > MOVEMENT_TURNS:
+				print(movement_path)
+				movement_path.pop_front()
+				movement_turn = 1
+				current_unit.underlying_hex = get_hex_at_pos(current_unit.position)
+	if highlighted_hex != null:
+		show_path(current_unit.underlying_hex.get_grid_coordinates(), highlighted_hex.get_grid_coordinates())
+		
+		if !is_there_unit_movement and Input.is_action_just_released("left_mouse_button"):
+			var start: Hex = current_unit.underlying_hex
+			var destination: Hex = get_hex_at_cursor()
+			
+			var id_path: PackedInt64Array = a_star.get_id_path(get_id_by_pos(start.get_grid_coordinates()), get_id_by_pos(destination.get_grid_coordinates()))
+			movement_path = []
+			for id in id_path:
+				var next_hex: Hex = grid.get_hex_by_pos(get_pos_by_id(id))
+				
+				if next_hex.texture == HEXAGON_FILLED_TEXTURE or next_hex == current_unit.underlying_hex:
+					movement_path.append(next_hex)
+				else:
+					break
+			
+			is_there_unit_movement = true
+			unit_offset_to_hex = current_unit.position - current_unit.underlying_hex.position
+	if !is_there_unit_movement and reachable_pivot != current_unit.underlying_hex:
+		reachable_pivot = current_unit.underlying_hex
+		grid.reset_grid_textures()
+		fill_reachable(reachable_pivot, 4)
+
+func show_path(start: Vector2, end: Vector2):
+	var point_offset: Vector2 = Vector2(0, -20)
+	
+	var start_hex: Hex = grid.get_hex_by_pos(start)
+	var destination_hex: Hex = grid.get_hex_by_pos(end)
+	
+	if destination_hex != last_navigated and destination_hex != null:
 		if nav_line != null:
 			self.remove_child(nav_line)
 		nav_line = Line2D.new()
-		var id_path: PackedInt64Array = a_star.get_id_path(0, get_id_by_pos(highlighted_hex.get_grid_coordinates()))
-		var path_points: Array = [grid.get_hex(0, 0).position + Vector2(0, -25)]
+		var id_path: PackedInt64Array = a_star.get_id_path(get_id_by_pos(start), get_id_by_pos(end))
+		var path_points: Array = [grid.get_hex_by_pos(start).position + point_offset]
 		for id in id_path:
 			var pos: Vector2 = get_pos_by_id(id)
-			path_points.append(grid.get_hex_by_pos(pos).position + Vector2(0, -25))
+			path_points.append(grid.get_hex_by_pos(pos).position + point_offset)
 		nav_line.points = PackedVector2Array(path_points)
 		
-		print(a_star.get_point_count())
-		print(a_star.get_point_ids())
+		#print(a_star.get_point_count())
+		#print(a_star.get_point_ids())
 		#print(str(path_points))
 		self.add_child(nav_line)
 		last_navigated = highlighted_hex
@@ -118,7 +192,10 @@ func highlight_hovered():
 func get_hex_at_cursor() -> Hex:
 	var mouse_coords: Vector2 = get_global_mouse_position()
 	
-	var raycast: PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(mouse_coords, mouse_coords)
+	return get_hex_at_pos(mouse_coords)
+
+func get_hex_at_pos(position: Vector2) -> Hex:
+	var raycast: PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(position, position)
 	
 	raycast.collide_with_areas = true
 	raycast.hit_from_inside = true
@@ -137,7 +214,7 @@ func hex_reachable(start: Hex, movement: int):
 	var fringes = [] # array of arrays of hexes
 	fringes.append([start])
 	for k in range(1, movement + 1):
-		print("k %s" % k)
+		#print("k %s" % k)
 		fringes.append([])
 		for hex in fringes[k-1]:
 			for dir in range(0, 6): # 0 ≤ dir < 6:
@@ -146,8 +223,8 @@ func hex_reachable(start: Hex, movement: int):
 					if !visited.has(neighbor):	#add neighbor to visited
 						visited.append(neighbor)
 					fringes[k].append(neighbor)
-					print("(%s" % neighbor.column + ",%s)" % neighbor.row)
-		print()
+					#print("(%s" % neighbor.column + ",%s)" % neighbor.row)
+		#print()
 	return visited
 
 const oddr_direction_differences = [

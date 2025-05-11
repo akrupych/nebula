@@ -4,12 +4,14 @@ class_name Grid
 const COLUMNS = 11
 const ROWS = 8
 
+const HEXAGON_DEFAULT_TEXTURE = preload("res://sprites/hexagon.png")
+
 @onready var hexagon: Hex = $Hex
 
 @onready var hexagon_right: Hex = $Hex2
 @onready var hexagon_down: Hex = $Hex3
 
-@export var grid: Array = []
+@export var grid: Array[Array] = []
 
 func _ready():
 	prepare_grid()
@@ -36,6 +38,11 @@ func prepare_grid():
 			new_hex.add_child(label)
 			self.add_child(new_hex)
 			grid[i].append(new_hex)
+
+func reset_grid_textures():
+	for i in range(ROWS):
+		for j in range(COLUMNS):
+			grid[i][j].texture = HEXAGON_DEFAULT_TEXTURE
 
 func delete_initial_hexes():
 	self.remove_child(hexagon)
