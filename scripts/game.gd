@@ -6,10 +6,12 @@ extends Node2D
 
 var reachable_pivot: Hex
 
+# todo check highlighted_hex + current_unit.hex instead
 var highlighted_hex: Hex = null
 var last_navigated: Hex = null
 var nav_line: Line2D = null
 const HEXAGON_DEFAULT_TEXTURE = preload("res://sprites/hexagon.png")
+# todo rename to underscore without whitespace
 const HEXAGON_FILLED_TEXTURE = preload("res://sprites/hexagon filled.png")
 
 var a_star: AStar3D = AStar3D.new()
@@ -43,48 +45,40 @@ func _process(_delta):
 		turn_counter.text = "Turn count: " + str(turn_number + 1)
 	
 	var current_unit: Unit = units[turn_order]
-	
-	if is_there_unit_movement:
-		if movement_path.size() < 2:
-			is_there_unit_movement = false
-			movement_path = []
-			movement_turn = 1
-			turn_order += 1
-		else:
-			var from: Hex = movement_path[0]
-			var to: Hex = movement_path[1]
-			var path_step: Vector2 = (to.position - from.position) / MOVEMENT_TURNS
-			current_unit.position = from.position + (path_step * movement_turn) + unit_offset_to_hex
-			movement_turn += 1
-			
-			if movement_turn > MOVEMENT_TURNS:
-				print(movement_path)
-				movement_path.pop_front()
-				movement_turn = 1
-				current_unit.underlying_hex = get_hex_at_pos(current_unit.position)
 	if highlighted_hex != null:
 		show_path(current_unit.underlying_hex.get_grid_coordinates(), highlighted_hex.get_grid_coordinates())
-		
-		if !is_there_unit_movement and Input.is_action_just_released("left_mouse_button"):
-			var start: Hex = current_unit.underlying_hex
-			var destination: Hex = get_hex_at_cursor()
-			
-			var id_path: PackedInt64Array = a_star.get_id_path(get_id_by_pos(start.get_grid_coordinates()), get_id_by_pos(destination.get_grid_coordinates()))
-			movement_path = []
-			for id in id_path:
-				var next_hex: Hex = grid.get_hex_by_pos(get_pos_by_id(id))
-				
-				if next_hex.texture == HEXAGON_FILLED_TEXTURE or next_hex == current_unit.underlying_hex:
-					movement_path.append(next_hex)
-				else:
-					break
-			
-			is_there_unit_movement = true
-			unit_offset_to_hex = current_unit.position - current_unit.underlying_hex.position
 	if !is_there_unit_movement and reachable_pivot != current_unit.underlying_hex:
 		reachable_pivot = current_unit.underlying_hex
 		grid.reset_grid_textures()
 		fill_reachable(reachable_pivot, 4)
+		
+func _input(event: InputEvent):
+	# Check if this is a mouse button event
+	if event is InputEventMouseButton:
+		# BUTTON_LEFT is a built‑in constant for the left mouse button
+		if event.button_index == MOUSE_BUTTON_LEFT and event.is_released() and highlighted_hex != null:
+			is_there_unit_movement = true
+			var start: Hex = units[turn_order].underlying_hex
+			var destination: Hex = get_hex_at_cursor()
+			
+			var id_path: PackedInt64Array = a_star.get_id_path(get_id_by_pos(start.get_grid_coordinates()), get_id_by_pos(destination.get_grid_coordinates()))
+			movement_path = []
+			unit_offset_to_hex = units[turn_order].position - units[turn_order].underlying_hex.position
+			var tween = create_tween()
+			for id in id_path:
+				var next_hex: Hex = grid.get_hex_by_pos(get_pos_by_id(id))
+				
+				if next_hex.texture == HEXAGON_FILLED_TEXTURE:
+					tween.chain().tween_property(
+						units[turn_order],
+						"position",
+						next_hex.position + unit_offset_to_hex,
+						.2
+					)
+					if id == id_path[id_path.size()-1]:
+						await tween.finished
+						is_there_unit_movement = false
+						units[turn_order].underlying_hex = next_hex
 
 func show_path(start: Vector2, end: Vector2):
 	var point_offset: Vector2 = Vector2(0, -20)
