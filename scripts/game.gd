@@ -14,7 +14,7 @@ const HEXAGON_DEFAULT_TEXTURE = preload("res://sprites/hexagon.png")
 # todo rename to underscore without whitespace
 const HEXAGON_FILLED_TEXTURE = preload("res://sprites/hexagon filled.png")
 
-var a_star: AStar3D = AStar3D.new()
+var a_star: AStar2D = AStar2D.new()
 
 @onready var units: Array[Unit] = [samurai]
 var turn_order: int = 0
@@ -59,14 +59,14 @@ func _input(event: InputEvent):
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_released() and highlighted_hex != null:
 			is_there_unit_movement = true
 			var start: Hex = units[turn_order].underlying_hex
-			var destination: Hex = get_hex_at_cursor()
+			var destination: Hex = get_hex_at_pos(get_global_mouse_position())
 			
-			var id_path: PackedInt64Array = a_star.get_id_path(get_id_by_pos(start.get_grid_coordinates()), get_id_by_pos(destination.get_grid_coordinates()))
+			var id_path: PackedInt64Array = a_star.get_id_path(start.id, destination.id)
 			movement_path = []
 			unit_offset_to_hex = units[turn_order].position - units[turn_order].underlying_hex.position
 			var tween = create_tween()
 			for id in id_path:
-				var next_hex: Hex = grid.get_hex_by_pos(get_pos_by_id(id))
+				var next_hex: Hex = grid.get_hex_by_id(id)
 				
 				if next_hex.texture == HEXAGON_FILLED_TEXTURE:
 					tween.chain().tween_property(
@@ -83,60 +83,20 @@ func _input(event: InputEvent):
 func show_path(start: Vector2, end: Vector2):
 	var point_offset: Vector2 = Vector2(0, -20)
 	
-	var start_hex: Hex = grid.get_hex_by_pos(start)
-	var destination_hex: Hex = grid.get_hex_by_pos(end)
+	var start_hex: Hex = grid.get_hex(start.x, start.y)
+	var end_hex: Hex = grid.get_hex(end.x, end.y)
 	
-	if destination_hex != last_navigated and destination_hex != null:
+	if end_hex != last_navigated and end_hex != null:
 		if nav_line != null:
 			self.remove_child(nav_line)
 		nav_line = Line2D.new()
-		var id_path: PackedInt64Array = a_star.get_id_path(get_id_by_pos(start), get_id_by_pos(end))
-		var path_points: Array = [grid.get_hex_by_pos(start).position + point_offset]
+		var id_path: PackedInt64Array = a_star.get_id_path(start_hex.id, end_hex.id)
+		var path_points: Array = [start_hex.position + point_offset]
 		for id in id_path:
-			var pos: Vector2 = get_pos_by_id(id)
-			path_points.append(grid.get_hex_by_pos(pos).position + point_offset)
+			path_points.append(grid.get_hex_by_id(id).position + point_offset)
 		nav_line.points = PackedVector2Array(path_points)
-		
-		#print(a_star.get_point_count())
-		#print(a_star.get_point_ids())
-		#print(str(path_points))
 		self.add_child(nav_line)
 		last_navigated = highlighted_hex
-
-func axial_to_oddr(axial: Vector2) -> Vector2:
-	var col = axial.y + (axial.x - (int(axial.x)&1)) / 2
-	var row = axial.x
-	return Vector2(row, col)
-
-func oddr_to_axial(oddr: Vector2) -> Vector2:
-	var q = oddr.y - (oddr.x - (int(oddr.x)&1)) / 2
-	var r = oddr.x
-	return Vector2(r, q)
-
-func cube_to_axial(cube: Vector3) -> Vector2:
-	var q = cube.x
-	var r = cube.y
-	return Vector2(r, q)
-
-func axial_to_cube(axial: Vector2) -> Vector3:
-	var q = axial.y
-	var r = axial.x
-	var s = -q-r
-	return Vector3(q, r, s)
-
-func oddr_to_cube(oddr: Vector2) -> Vector3:
-	return axial_to_cube(oddr_to_axial(oddr))
-
-func cube_to_oddr(cube: Vector3) -> Vector2:
-	return axial_to_oddr(cube_to_axial(cube))
-
-func get_id_by_pos(pos: Vector2) -> int:
-	return pos.x * grid.COLUMNS + pos.y
-
-func get_pos_by_id(id: int) -> Vector2:
-	var column: int = id % grid.COLUMNS
-	var row: int = (id - column) / grid.COLUMNS
-	return Vector2(row, column)
 
 ## Defining hexes that're blocked and units cannot pass through
 func block_hexes():
@@ -152,17 +112,12 @@ func fill_reachable(start: Hex, speed: int):
 
 ## Preparing AStar2D to work with pathfinding
 func prepare_navigation():
-	var id_counter = 0
 	for i in range(grid.ROWS):
 		for j in range(grid.COLUMNS):
 			var hex: Hex = grid.get_hex(i, j)
-			
-			a_star.add_point(id_counter, oddr_to_cube(hex.get_grid_coordinates()))
-			id_counter += 1
+			a_star.add_point(hex.id, hex.position)
 	for id in a_star.get_point_ids():
-		var hex_cube_pos: Vector3 = a_star.get_point_position(id)
-		var hex_pos: Vector2 = cube_to_oddr(hex_cube_pos)
-		var hex: Hex = grid.get_hex_by_pos(hex_pos)
+		var hex: Hex = grid.get_hex_by_id(id)
 		for dir in range(6):
 			var neighbor = hex_neighbor(hex, dir)
 			if !hex.is_blocked and neighbor != null and !neighbor.is_blocked:
@@ -171,7 +126,7 @@ func prepare_navigation():
 
 ## Highlight hovered hex using simple shader
 func highlight_hovered():
-	var hex = get_hex_at_cursor()
+	var hex = get_hex_at_pos(get_global_mouse_position())
 	if hex != null:
 		if highlighted_hex != hex and highlighted_hex != null:
 			highlighted_hex.material = null
@@ -182,15 +137,8 @@ func highlight_hovered():
 		highlighted_hex.material = null
 	highlighted_hex = hex
 
-## Returns Hex hovered with cursor, if no hex is hovered, then null is returned
-func get_hex_at_cursor() -> Hex:
-	var mouse_coords: Vector2 = get_global_mouse_position()
-	
-	return get_hex_at_pos(mouse_coords)
-
 func get_hex_at_pos(position: Vector2) -> Hex:
 	var raycast: PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(position, position)
-	
 	raycast.collide_with_areas = true
 	raycast.hit_from_inside = true
 	var result: Dictionary = get_world_2d().direct_space_state.intersect_ray(raycast)

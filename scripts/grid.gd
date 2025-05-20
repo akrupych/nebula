@@ -16,6 +16,8 @@ const HEXAGON_DEFAULT_TEXTURE = preload("res://sprites/hexagon.png")
 func _ready():
 	prepare_grid()
 	delete_initial_hexes()
+	var hex = get_hex_by_id(10)
+	print(str(hex.row) + ":" + str(hex.column))
 
 func prepare_grid():
 	var sample_hex: Hex = hexagon.duplicate()
@@ -23,6 +25,7 @@ func prepare_grid():
 	var offset_right: Vector2 = hexagon_right.position - hexagon.position
 	var offset_down: Vector2 = hexagon_down.position - hexagon.position
 	
+	var id = 0
 	for i in range(ROWS):
 		grid.append([])
 		for j in range(COLUMNS):
@@ -32,6 +35,9 @@ func prepare_grid():
 			
 			new_hex.column = j
 			new_hex.row = i
+			new_hex.id = id
+			
+			id += 1
 			var label = Label.new()
 			
 			label.text = str(i) + ", " + str(j)
@@ -54,5 +60,5 @@ func get_hex(row: int, column: int) -> Hex:
 		return grid[row][column]
 	return null
 
-func get_hex_by_pos(pos: Vector2) -> Hex:
-	return get_hex(pos.x, pos.y)
+func get_hex_by_id(id: int) -> Hex:
+	return grid[id / COLUMNS][id % COLUMNS]

@@ -3,6 +3,7 @@ class_name Hex
 
 @export var row: int
 @export var column: int
+@export var id: int
 @export var is_blocked: bool = false
 
 func _process(_delta):
