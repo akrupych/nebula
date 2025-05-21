@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://b51ewttoobfjy"]
+[gd_scene load_steps=5 format=3 uid="uid://b51ewttoobfjy"]
 
 [ext_resource type="Texture2D" uid="uid://bcv645jb48khl" path="res://sprites/hexagon.png" id="1_djunl"]
 [ext_resource type="Script" uid="uid://bhub0btx7iyyn" path="res://scripts/hex.gd" id="2_khich"]
+[ext_resource type="Texture2D" uid="uid://bnry6v0whgvmc" path="res://sprites/hexagon_filled.png" id="3_eljhm"]
+[ext_resource type="Texture2D" uid="uid://ec5j6sys5tr7" path="res://sprites/hexagon_hovered.png" id="3_wbi06"]
 
 [node name="Hex" type="Sprite2D"]
 texture = ExtResource("1_djunl")
@@ -11,3 +13,14 @@ script = ExtResource("2_khich")
 
 [node name="CollisionShape2D" type="CollisionPolygon2D" parent="Area2D"]
 polygon = PackedVector2Array(0, -37, -32, -18, -32, 18, 0, 37, 32, 18, 32, -18)
+
+[node name="Obstacle" type="Sprite2D" parent="."]
+
+[node name="Filled" type="Sprite2D" parent="."]
+texture = ExtResource("3_eljhm")
+
+[node name="Hovered" type="Sprite2D" parent="."]
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("3_wbi06")
+
+[connection signal="input_event" from="Area2D" to="." method="_on_input_event"]

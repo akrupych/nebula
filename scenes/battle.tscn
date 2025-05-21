@@ -74,14 +74,8 @@ texture = ExtResource("2_6vh42")
 position = Vector2(0, -20)
 script = ExtResource("3_f4pi3")
 
-[node name="Hex" parent="Grid" instance=ExtResource("4_yahae")]
+[node name="InitialHex" parent="Grid" instance=ExtResource("4_yahae")]
 position = Vector2(72, 176)
-
-[node name="Hex2" parent="Grid" instance=ExtResource("4_yahae")]
-position = Vector2(135, 176)
-
-[node name="Hex3" parent="Grid" instance=ExtResource("4_yahae")]
-position = Vector2(104, 231)
 
 [node name="Samurai" type="AnimatedSprite2D" parent="."]
 material = SubResource("ShaderMaterial_6t8i5")
@@ -92,9 +86,11 @@ frame_progress = 0.282471
 script = ExtResource("7_4k1nj")
 metadata/_custom_type_script = "uid://ol5yaeobbmo4"
 
-[node name="TurnCounter" type="Label" parent="."]
+[node name="CurrentTurn" type="Label" parent="."]
 offset_left = 343.0
 offset_top = -1.0
 offset_right = 446.0
 offset_bottom = 22.0
-text = "Turn count: 1"
+text = "Current Turn: 1"
+
+[connection signal="clicked" from="Grid/InitialHex" to="." method="_on_hex_clicked"]
