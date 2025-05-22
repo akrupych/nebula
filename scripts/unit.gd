@@ -1,8 +1,15 @@
 extends AnimatedSprite2D
 class_name Unit
 
-@export var hex: Hex = null
-@export var speed: int = 0
+var hex: Hex = null
+var speed: int = 0
+var facing_right: bool = true
 
-func get_position_at(hex: Hex) -> Vector2:
-	return hex.position + position - self.hex.position
+func set_idle():
+	play("idle")
+
+func set_moving():
+	play("move")
+
+func set_striking():
+	play("strike")

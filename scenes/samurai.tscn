@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://8x74ug0242oc"]
+[gd_scene load_steps=20 format=3 uid="uid://8x74ug0242oc"]
 
 [ext_resource type="Shader" uid="uid://degwetys6ixsf" path="res://shaders/selection.gdshader" id="1_tri0m"]
 [ext_resource type="Texture2D" uid="uid://b2ipy827jj5dd" path="res://sprites/samurai.png" id="2_v3kpt"]
@@ -9,57 +9,126 @@ shader = ExtResource("1_tri0m")
 shader_parameter/line_color = Color(1, 1, 1, 1)
 shader_parameter/line_thickness = 1.0
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_dw4jg"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_v3kpt"]
+atlas = ExtResource("2_v3kpt")
+region = Rect2(0, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xfi5h"]
+atlas = ExtResource("2_v3kpt")
+region = Rect2(100, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s6way"]
 atlas = ExtResource("2_v3kpt")
 region = Rect2(0, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_0npn6"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_a21b5"]
 atlas = ExtResource("2_v3kpt")
 region = Rect2(100, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_mhv3b"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_ppfog"]
 atlas = ExtResource("2_v3kpt")
 region = Rect2(200, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_lcjiy"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_di0tn"]
 atlas = ExtResource("2_v3kpt")
 region = Rect2(300, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ol6im"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_r68po"]
 atlas = ExtResource("2_v3kpt")
 region = Rect2(400, 0, 100, 100)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_b1i6x"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_srofd"]
 atlas = ExtResource("2_v3kpt")
 region = Rect2(500, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h7047"]
+atlas = ExtResource("2_v3kpt")
+region = Rect2(600, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tqyoe"]
+atlas = ExtResource("2_v3kpt")
+region = Rect2(0, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7a1bw"]
+atlas = ExtResource("2_v3kpt")
+region = Rect2(100, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qov18"]
+atlas = ExtResource("2_v3kpt")
+region = Rect2(200, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1547w"]
+atlas = ExtResource("2_v3kpt")
+region = Rect2(300, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gwc11"]
+atlas = ExtResource("2_v3kpt")
+region = Rect2(400, 100, 100, 100)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_sl0w2"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_dw4jg")
+"texture": SubResource("AtlasTexture_v3kpt")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_0npn6")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mhv3b")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_lcjiy")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ol6im")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_b1i6x")
+"texture": SubResource("AtlasTexture_xfi5h")
 }],
 "loop": true,
-"name": &"default",
-"speed": 5.0
+"name": &"idle",
+"speed": 2.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s6way")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a21b5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ppfog")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_di0tn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r68po")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_srofd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h7047")
+}],
+"loop": true,
+"name": &"move",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tqyoe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7a1bw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qov18")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1547w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gwc11")
+}],
+"loop": true,
+"name": &"strike",
+"speed": 4.0
 }]
 
 [node name="Samurai" type="AnimatedSprite2D"]
 material = SubResource("ShaderMaterial_6t8i5")
 sprite_frames = SubResource("SpriteFrames_sl0w2")
+animation = &"move"
+frame = 1
+frame_progress = 0.807051
 script = ExtResource("3_v3kpt")

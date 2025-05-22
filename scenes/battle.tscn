@@ -1,69 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://ds3y2rrr11y1h"]
+[gd_scene load_steps=5 format=3 uid="uid://ds3y2rrr11y1h"]
 
-[ext_resource type="Script" uid="uid://ccuvfcxqhf24m" path="res://scripts/game.gd" id="1_6vh42"]
+[ext_resource type="Script" uid="uid://ccuvfcxqhf24m" path="res://scripts/battle.gd" id="1_6vh42"]
 [ext_resource type="Texture2D" uid="uid://bsiwyg0yjyo6m" path="res://sprites/sketch_bg.png" id="2_6vh42"]
 [ext_resource type="Script" uid="uid://j1kw2y3jg5ax" path="res://scripts/grid.gd" id="3_f4pi3"]
 [ext_resource type="PackedScene" uid="uid://b51ewttoobfjy" path="res://scenes/hex.tscn" id="4_yahae"]
-[ext_resource type="Shader" uid="uid://degwetys6ixsf" path="res://shaders/selection.gdshader" id="5_v7i3o"]
-[ext_resource type="Texture2D" uid="uid://b2ipy827jj5dd" path="res://sprites/samurai.png" id="6_66ngm"]
-[ext_resource type="Script" uid="uid://ol5yaeobbmo4" path="res://scripts/samurai.gd" id="7_4k1nj"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_6t8i5"]
-shader = ExtResource("5_v7i3o")
-shader_parameter/line_color = Color(1, 1, 1, 1)
-shader_parameter/line_thickness = 1.0
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dw4jg"]
-atlas = ExtResource("6_66ngm")
-region = Rect2(0, 0, 100, 100)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_0npn6"]
-atlas = ExtResource("6_66ngm")
-region = Rect2(100, 0, 100, 100)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_mhv3b"]
-atlas = ExtResource("6_66ngm")
-region = Rect2(200, 0, 100, 100)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lcjiy"]
-atlas = ExtResource("6_66ngm")
-region = Rect2(300, 0, 100, 100)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ol6im"]
-atlas = ExtResource("6_66ngm")
-region = Rect2(400, 0, 100, 100)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_b1i6x"]
-atlas = ExtResource("6_66ngm")
-region = Rect2(500, 0, 100, 100)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_sl0w2"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dw4jg")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_0npn6")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mhv3b")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_lcjiy")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ol6im")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_b1i6x")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
-[node name="Game" type="Node2D"]
+[node name="Battle" type="Node2D"]
 script = ExtResource("1_6vh42")
 
 [node name="BattleBg" type="Sprite2D" parent="."]
@@ -76,15 +18,6 @@ script = ExtResource("3_f4pi3")
 
 [node name="InitialHex" parent="Grid" instance=ExtResource("4_yahae")]
 position = Vector2(72, 176)
-
-[node name="Samurai" type="AnimatedSprite2D" parent="."]
-material = SubResource("ShaderMaterial_6t8i5")
-position = Vector2(75, 127)
-sprite_frames = SubResource("SpriteFrames_sl0w2")
-autoplay = "default"
-frame_progress = 0.282471
-script = ExtResource("7_4k1nj")
-metadata/_custom_type_script = "uid://ol5yaeobbmo4"
 
 [node name="CurrentTurn" type="Label" parent="."]
 offset_left = 343.0

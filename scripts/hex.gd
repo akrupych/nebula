@@ -20,9 +20,6 @@ func _ready():
 func set_filled(value: bool):
 	filled.visible = value
 
-func set_hovered(value: bool):
-	hovered.visible = value
-
 func set_obstacle(texture: Texture2D):
 	obstacle.texture = texture
 
@@ -33,3 +30,12 @@ func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event is InputEventMouseButton && event.button_index == MOUSE_BUTTON_LEFT:
 		if pressed && !event.is_pressed(): clicked.emit(self)
 		pressed = event.is_pressed()
+
+func _on_mouse_entered() -> void:
+	hovered.visible = true
+
+func _on_mouse_exited() -> void:
+	hovered.visible = false
+
+func _to_string() -> String:
+	return str(row) + "," + str(column)

@@ -1,5 +1,5 @@
 extends Unit
 class_name Samurai
 
-func _ready() -> void:
+func _ready():
 	self.speed = 4
