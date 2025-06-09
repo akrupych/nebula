@@ -35,17 +35,26 @@ func _ready():
 		for neighbor in get_neighbors(hex):
 			a_star.connect_points(hex.id, neighbor.id)
 
-# coordinates are hex row and column, weight is hex difficulty to pass
-func add_obstacle(coordinates: Vector2, weight: float, texture: Texture2D):
-	var hex = get_hex(coordinates.x, coordinates.y)
-	hex.weight = weight
-	hex.set_obstacle(texture)
-	a_star.set_point_weight_scale(hex.id, weight)
+func add_obstacle(row: int, column: int, obstacle: Obstacle):
+	var center_hex = get_hex(row, column)
+	obstacle.position = center_hex.position - Vector2(0, 30)
+	var hexes = [center_hex]
+	for direction in obstacle.get_directions():
+		hexes.append(get_neighbor(hexes[-1], direction))
+	hexes.filter(func(it): it != null)
+	var bottom_row = center_hex.row
+	for hex in hexes:
+		hex.weight = obstacle.get_weight()
+		a_star.set_point_weight_scale(hex.id, hex.weight)
+		if (hex.row > bottom_row): bottom_row = hex.row
+	obstacle.z_index = bottom_row + 1
+	add_child(obstacle)
 	
 func place_unit(unit: Unit, row: int, column: int):
 	var hex = get_hex(row, column)
 	unit.hex = hex
 	unit.position = hex.position - Vector2(0, 50)
+	unit.z_index = row + 1
 
 # highlight hexes currently reachable by a unit
 func show_reachable_hexes(unit: Unit):
@@ -67,15 +76,21 @@ func hide_reachable_hexes():
 
 # get existing neighboring hexes
 func get_neighbors(hex: Hex) -> Array[Hex]:
-	var odd = [[+1, 0], [0, -1], [-1, -1], [-1, 0], [-1, +1], [0, +1]]
-	var even = [[+1, 0], [+1, -1], [0, -1], [-1, 0], [ 0, +1], [+1, +1]]
-	var diffs = even if hex.row & 1 else odd
 	var neighbors: Array[Hex] = []
+	print("--- " + str(hex) + " ---")
 	for direction in 6:
-		var diff = diffs[direction]
-		var neighbor = get_hex(hex.row + diff[1], hex.column + diff[0])
+		var neighbor = get_neighbor(hex, direction)
+		print("direction " + str(direction) + " hex " + str(neighbor))
 		if neighbor != null: neighbors.append(neighbor)
 	return neighbors
+
+var odd = [[+1, 0], [0, -1], [-1, -1], [-1, 0], [-1, +1], [0, +1]]
+var even = [[+1, 0], [+1, -1], [0, -1], [-1, 0], [ 0, +1], [+1, +1]]
+
+func get_neighbor(hex: Hex, direction: int) -> Hex:
+	var diffs = even if hex.row & 1 else odd
+	var diff = diffs[direction]
+	return get_hex(hex.row + diff[1], hex.column + diff[0])
 
 # find hex by coordinates
 func get_hex(row: int, column: int) -> Hex:

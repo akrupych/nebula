@@ -3,7 +3,6 @@ class_name Hex
 
 @onready var filled: Sprite2D = $Filled
 @onready var hovered: Sprite2D = $Hovered
-@onready var obstacle: Sprite2D = $Obstacle
 
 signal clicked(hex: Hex)
 
@@ -19,9 +18,6 @@ func _ready():
 
 func set_filled(value: bool):
 	filled.visible = value
-
-func set_obstacle(texture: Texture2D):
-	obstacle.texture = texture
 
 func get_coordinates() -> Vector2:
 	return Vector2(row, column)

@@ -14,8 +14,6 @@ script = ExtResource("2_khich")
 [node name="CollisionShape2D" type="CollisionPolygon2D" parent="Area2D"]
 polygon = PackedVector2Array(0, -37, -32, -18, -32, 18, 0, 37, 32, 18, 32, -18)
 
-[node name="Obstacle" type="Sprite2D" parent="."]
-
 [node name="Filled" type="Sprite2D" parent="."]
 texture = ExtResource("3_eljhm")
 

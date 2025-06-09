@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qiatlhxkmnp4"
-path="res://.godot/imported/obstacle.png-0258c5f5ce65bfa0dd8610adeb784f54.ctex"
+uid="uid://dodenk5sj6ns7"
+path="res://.godot/imported/lake.png-896caa1df1e098378af709bf0dac4c8c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/obstacle.png"
-dest_files=["res://.godot/imported/obstacle.png-0258c5f5ce65bfa0dd8610adeb784f54.ctex"]
+source_file="res://sprites/lake.png"
+dest_files=["res://.godot/imported/lake.png-896caa1df1e098378af709bf0dac4c8c.ctex"]
 
 [params]
 

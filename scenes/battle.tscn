@@ -20,10 +20,9 @@ script = ExtResource("3_f4pi3")
 position = Vector2(90, 220)
 
 [node name="CurrentTurn" type="Label" parent="."]
-offset_left = 343.0
-offset_top = -1.0
-offset_right = 446.0
-offset_bottom = 22.0
+offset_right = 1277.0
+offset_bottom = 23.0
 text = "Current Turn: 1"
+horizontal_alignment = 1
 
 [connection signal="clicked" from="Grid/InitialHex" to="." method="_on_hex_clicked"]
