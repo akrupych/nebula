@@ -1,8 +1,8 @@
 extends Node2D
 class_name Grid
 
-const COLUMNS = 11
-const ROWS = 8
+const COLUMNS = 18
+const ROWS = 9
 
 @onready var initial_hex: Hex = $InitialHex
 

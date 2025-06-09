@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bokaxhb8uipku"
-path="res://.godot/imported/petals_square.png-cf70d51e243bd77844290579174f5883.ctex"
+uid="uid://etq0ccr1tx24"
+path="res://.godot/imported/japanese_bg.png-f61588e3b1fc1e81e8e3293c1bee2224.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/petals_square.png"
-dest_files=["res://.godot/imported/petals_square.png-cf70d51e243bd77844290579174f5883.ctex"]
+source_file="res://sprites/japanese_bg.png"
+dest_files=["res://.godot/imported/japanese_bg.png-f61588e3b1fc1e81e8e3293c1bee2224.ctex"]
 
 [params]
 
